@@ -1,7 +1,7 @@
 import re
 import sys
 
-# Inventar nome irado = preCcessor ??
+# Inventar nome irado = PreCCessor ??
 
 def remove_comments_linebreak(line, code):
     oneSpaceLine = re.sub(r'(  +)', ' ', line)
