@@ -5,19 +5,60 @@ import sys
 #It will remove comments, linebreaks, multiple spaces and desnecessary spaces.
 #It will also expand #include and #define
 
+def process_include_directives(text):
+    include_directives = re.compile(r'#include\s*[<](.*?)[>]').findall(text)    
+    include_locals = re.compile(r'#include\s*["](.*?)["]').findall(text)
+    print(include_directives)
+    print(include_locals)
 
-def remove_inline_comments(line):
+    shoud_continue = True
 
-    slash_position = line.find("//")
-    if slash_position != -1:
-        aux = line[:slash_position]
-    else:
-        aux = line
+    for match in include_directives:
+        try:
+            filepath = '/usr/include/' + match
+            with open(filepath, 'r') as include_file:
+                include_content = include_file.read()
+                text = text.replace(f'#include <{match}>', include_content)
+                include_directives.remove(match)
+        except FileNotFoundError:
+            include_directives.remove(match)
+            print(f"Warning: File '{match}' not found in include directive.")            
+
+
+    for match in include_locals:
+        try:
+            with open(match, 'r') as include_file:
+                include_locals.remove(match)
+                include_content = include_file.read()
+                text = text.replace(f'#include "{match}"', include_content)
+        except FileNotFoundError:
+            include_locals.remove(match)
+            print(f"Warning: File '{match}' not found in local directory.")
+    
+    if (len(include_directives) + len(include_locals)) == 0:
+        shoud_continue = False
+
+    return [text, shoud_continue]
+
+
+def remove_inline_comments(code):
+    aux = ''
+    for line in code.splitlines(True):
+        if line.find('//') != -1:
+            aux += line[0:line.find('//')]
+        else:
+            aux += line
     return aux
+
 
 def remove_multiline_comments(code):
-    aux = code
-    return aux
+    opencomment = code.find('/*')
+    closecomment = code.find('*/')
+    if opencomment == -1 and closecomment == -1:
+        return code
+    else:
+        aux = code[0:opencomment] + code[closecomment+2:]
+        return remove_multiline_comments(aux)
 
 
 def remove_linebreak(code):
@@ -33,6 +74,7 @@ def remove_linebreak(code):
 
 def remove_multiple_spaces(code):
      aux = re.sub(r'(  +)', ' ', code) # remove multiple spaces
+     aux = re.sub(r'(\t+)', '', aux) # remove multiple spaces
      return aux
 
 def remove_desnecessary_space(code):
@@ -69,19 +111,19 @@ if __name__ == '__main__':
     output = open(output_file, "w")
 
 
-    newCode = ''
-    for line in input:
-        line = remove_inline_comments(line)
-        newCode += line
-    newCode = remove_linebreak(newCode)
-    newCode = remove_multiple_spaces(newCode)
-    newCode = remove_desnecessary_space(newCode)
+    aux_code = input.read()
+    aux_code = remove_inline_comments(aux_code)
+    [aux_code, still_include] = process_include_directives(aux_code)
+    # while still_include:
+    #     [aux_code, still_include] = process_include_directives(aux_code)
+    # [aux_code, still_include] = process_include_directives(aux_code)
+    # aux_code = remove_linebreak(aux_code)
+    # aux_code = remove_multiline_comments(aux_code)
+    # aux_code = remove_multiple_spaces(aux_code)
+    # aux_code = remove_desnecessary_space(aux_code)
 
-    
 
-    expand_define()
-    expand_include()
-    output.write(newCode)
+    output.write(aux_code)
 
     print("preCcessor finished with success!")
 
@@ -89,14 +131,11 @@ if __name__ == '__main__':
     output.close()
 
 
-
-
-
 '''
     order:
-    1. import define, include and macros (recursive)
-    2. expand define and macros (recursive) 
-    3. remove inline comments
+    1. remove inline comments
+    2. import define, include and macros (recursive)
+    3. expand define and macros (recursive) 
     4. remove linebreaks
     5. remove 'multiline' comments
     6. remove multiple spaces
