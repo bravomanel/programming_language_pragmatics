@@ -2,16 +2,13 @@ import re
 import sys
 
 #This is the PreCCessor, a simple pre-processor for C language.
-#It will remove comments, linebreaks, multiple spaces and desnecessary spaces.
+#It will remove inline and multiline comments, linebreaks, multiple and/or desnecessary spaces.
 #It will also expand #include and #define
 
 def process_include_directives(text):
     include_directives = re.compile(r'#include\s*[<](.*?)[>]').findall(text)    
     include_locals = re.compile(r'#include\s*["](.*?)["]').findall(text)
-    print(include_directives)
-    print(include_locals)
-
-    shoud_continue = True
+    included_any = False
 
     for match in include_directives:
         try:
@@ -19,9 +16,9 @@ def process_include_directives(text):
             with open(filepath, 'r') as include_file:
                 include_content = include_file.read()
                 text = text.replace(f'#include <{match}>', include_content)
+                included_any = True
                 include_directives.remove(match)
         except FileNotFoundError:
-            include_directives.remove(match)
             print(f"Warning: File '{match}' not found in include directive.")            
 
 
@@ -30,15 +27,16 @@ def process_include_directives(text):
             with open(match, 'r') as include_file:
                 include_locals.remove(match)
                 include_content = include_file.read()
+                included_any = True
                 text = text.replace(f'#include "{match}"', include_content)
         except FileNotFoundError:
-            include_locals.remove(match)
             print(f"Warning: File '{match}' not found in local directory.")
     
-    if (len(include_directives) + len(include_locals)) == 0:
-        shoud_continue = False
+    if (len(include_directives) + len(include_locals)) != 0 and included_any == False:
+        return text
+    else:
+        return process_include_directives(text)
 
-    return [text, shoud_continue]
 
 
 def remove_inline_comments(code):
@@ -74,15 +72,17 @@ def remove_linebreak(code):
 
 def remove_multiple_spaces(code):
      aux = re.sub(r'(  +)', ' ', code) # remove multiple spaces
-     aux = re.sub(r'(\t+)', '', aux) # remove multiple spaces
+     aux = re.sub(r'(\t)', '', aux) # remove tabs
      return aux
 
 def remove_desnecessary_space(code):
     aux = ''
     for line in code.splitlines(True):
-        aux += re.sub(r'\s*([;:`\'|,!"(){}=\-<>\[\]])\s*', r'\1', line) # remove spaces after ;(){}=-
-        aux+= '\n'
-    return aux[:-21]
+        if line.find('#') != -1:
+            aux += re.sub(r'\s+#', '#', line)
+        else:
+            aux += re.sub(r'\s*([;:`|,!(){}=\-<>\[\]])\s*', r'\1', line)
+    return aux
 
 def call_error():
     print("Usage: python preCcessor.py <input_file.c>")
@@ -112,24 +112,11 @@ if __name__ == '__main__':
     aux_code = remove_multiline_comments(aux_code)
     aux_code = remove_multiple_spaces(aux_code)
     aux_code = remove_desnecessary_space(aux_code)
-    # [aux_code, still_include] = process_include_directives(aux_code)
-
-
+    aux_code = process_include_directives(aux_code)
+    
     output.write(aux_code)
 
     print("preCcessor finished with success!")
 
     input.close()
     output.close()
-
-
-'''
-    order:
-    1. remove inline comments
-    2. import define, include and macros (recursive)
-    3. expand define and macros (recursive) 
-    4. remove linebreaks
-    5. remove 'multiline' comments
-    6. remove multiple spaces
-    7. remove desnecessary spaces
-'''
