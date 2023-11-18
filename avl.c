@@ -23,9 +23,12 @@ int altura (arvore *a) {
          return he + 1;
       }
    }
-}
+}   /*
 
-void ajustarFB (arvore *a) {
+multiline
+comment
+test
+*/ void ajustarFB (arvore *a) {
    if (a != NULL) {
       a->fb = altura(a->dir) - altura(a->esq);
       ajustarFB(a->esq);

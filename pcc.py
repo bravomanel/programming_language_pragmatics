@@ -65,7 +65,7 @@ def remove_linebreak(code):
     # destrincha linha por linha, checa #include or #define, se houver ele adiciona \n ao final da linha
     aux = ''
     for line in code.splitlines():
-        if line.find('#include') == -1 and line.find('#define') == -1:
+        if line.find('#') == -1:
             aux += line
         else:
             aux += line + '\n'
@@ -78,16 +78,11 @@ def remove_multiple_spaces(code):
      return aux
 
 def remove_desnecessary_space(code):
-    # aux = re.sub(r'([a-zA-Z0-9])(\s+)([a-zA-Z0-9])', r'\1\3', code) # remove spaces between letters and numbers
-    aux = re.sub(r'\s*([;:`\'|,!"(){}=\-<>\[\]])\s*', r'\1', code) # remove spaces after ;(){}=-
-    return aux
-
-def expand_include():
-    return
-
-def expand_define():
-    return
-
+    aux = ''
+    for line in code.splitlines(True):
+        aux += re.sub(r'\s*([;:`\'|,!"(){}=\-<>\[\]])\s*', r'\1', line) # remove spaces after ;(){}=-
+        aux+= '\n'
+    return aux[:-21]
 
 def call_error():
     print("Usage: python preCcessor.py <input_file.c>")
@@ -113,14 +108,11 @@ if __name__ == '__main__':
 
     aux_code = input.read()
     aux_code = remove_inline_comments(aux_code)
-    [aux_code, still_include] = process_include_directives(aux_code)
-    # while still_include:
-    #     [aux_code, still_include] = process_include_directives(aux_code)
+    aux_code = remove_linebreak(aux_code)
+    aux_code = remove_multiline_comments(aux_code)
+    aux_code = remove_multiple_spaces(aux_code)
+    aux_code = remove_desnecessary_space(aux_code)
     # [aux_code, still_include] = process_include_directives(aux_code)
-    # aux_code = remove_linebreak(aux_code)
-    # aux_code = remove_multiline_comments(aux_code)
-    # aux_code = remove_multiple_spaces(aux_code)
-    # aux_code = remove_desnecessary_space(aux_code)
 
 
     output.write(aux_code)
