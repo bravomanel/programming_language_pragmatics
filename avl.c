@@ -4,6 +4,10 @@
 
     #include <math.h>
 
+    #define NUMERO_UM 1
+
+    #define NOME_ARQUIVO entrada.txt
+
 // alunos: Arthur Peixoto / Emanuel Bravo;
 
 typedef struct arvore {
@@ -20,9 +24,9 @@ int altura (arvore *a) {
       int he = altura(a->esq);
       int hd = altura(a->dir);
       if (he < hd) {
-         return hd + 1;
+         return hd + NUMERO_UM;
       } else {
-         return he + 1;
+         return he + NUMERO_UM;
       }
    }
 }   /*
@@ -366,10 +370,10 @@ int main() {
 
     case 1:
 
-      arq = fopen("entrada.txt", "r");
+      arq = fopen("NOME_ARQUIVO", "r");
 
       if (arq == NULL) {
-        printf("\n !! Erro ao abrir o arquivo entrada.txt !! \n");
+        printf("\n !! Erro ao abrir o arquivo NOME_ARQUIVO !! \n");
         return 1;
       }
 

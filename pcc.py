@@ -52,6 +52,11 @@ def remove_desnecessary_space(code):
 
 
 def process_define(text):
+    define_directives = re.compile(r'#define\s*(\w+)\s*(.*)').findall(text)
+    for match in define_directives:
+        print(match[1])
+        text = text.replace(f'#define {match[0]} {match[1]}', '')
+        text = re.sub(r'\b' + match[0] + r'\b', match[1], text)
     return text
 
 def process_include(text):
@@ -111,12 +116,12 @@ if __name__ == '__main__':
 
     aux_code = input.read()
     aux_code = remove_inline_comments(aux_code)
+    aux_code = process_define(aux_code)
     aux_code = remove_linebreak(aux_code)
     aux_code = remove_multiline_comments(aux_code)
     aux_code = remove_multiple_spaces(aux_code)
     aux_code = remove_desnecessary_space(aux_code)
     aux_code = process_include(aux_code)
-    aux_code = process_define(aux_code)
     
     output.write(aux_code)
 
