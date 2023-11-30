@@ -2,8 +2,8 @@ import re
 import sys
 
 #This is the PreCCessor, a simple pre-processor for the C language.
-#It will remove inline and multiline comments, linebreaks, multiple and desnecessary spaces.
-#It will also expand the #include and #define
+#It will remove inline and multiline comments, linebreaks, multiple and/or desnecessary spaces.
+#It will also handle the #include and #define
 
 def remove_inline_comments(code):
     aux = ''
@@ -26,7 +26,6 @@ def remove_multiline_comments(code):
 
 
 def remove_linebreak(code):
-    # destrincha linha por linha, checa #include or #define, se houver ele adiciona \n ao final da linha
     aux = ''
     for line in code.splitlines():
         if line.find('#') == -1:
@@ -37,9 +36,9 @@ def remove_linebreak(code):
 
 
 def remove_multiple_spaces(code):
-     aux = re.sub(r'(  +)', ' ', code) # remove multiple spaces
-     aux = re.sub(r'(\t)', '', aux) # remove tabs
-     return aux
+    aux = re.sub(r'(  +)', ' ', code)
+    aux = re.sub(r'(\t)', '', aux)
+    return aux
 
 def remove_desnecessary_space(code):
     aux = ''
@@ -54,7 +53,6 @@ def remove_desnecessary_space(code):
 def process_define(text):
     define_directives = re.compile(r'#define\s*(\w+)\s*(.*)').findall(text)
     for match in define_directives:
-        print(match[1])
         text = text.replace(f'#define {match[0]} {match[1]}', '')
         text = re.sub(r'\b' + match[0] + r'\b', match[1], text)
     return text
@@ -109,7 +107,7 @@ if __name__ == '__main__':
 
     output_file = input_file[0:-2] + "-pcc.c"
 
-    print("preCCessor is running...")
+    print("PreCCessor is running...")
     input = open(input_file, "r")
     output = open(output_file, "w")
 
@@ -125,7 +123,7 @@ if __name__ == '__main__':
     
     output.write(aux_code)
 
-    print("preCCessor finished with success!")
+    print("PreCCessor finished with success!")
 
     input.close()
     output.close()
