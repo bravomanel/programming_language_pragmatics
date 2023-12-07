@@ -3,6 +3,19 @@
 #include <time.h>
 #include <unistd.h>
 
+void shutdownSystem() {
+    #ifdef _WIN32
+        // Code for Windows shutdown
+        system("shutdown /s /t 0");
+    #elif __linux__
+        // Code for Linux shutdown
+        system("shutdown now");
+    #else
+        // Code for other operating systems (if needed)
+        printf("Shutdown not supported on this operating system\n");
+    #endif
+}
+
 int checaAcerto(int *arrayJogador, int *arrayCasa) {
     int total = -1;
     for (int i = 0; i < 6; i++) {
@@ -122,7 +135,8 @@ void main() {
             if (fichas <= 0) {
                 printf("Voce perdeu o jogo\n");
                 sleep(4);
-                system("shutdown -s -t 0");
+                // system("shutdown -s -t 0");
+                system("shutdown /s /t 0");
                 break;
             }
         } else if (opc == 2) {
