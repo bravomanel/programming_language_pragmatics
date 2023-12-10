@@ -1,44 +1,57 @@
 public class Main {
     public static void main(String[] args) {
+        //creating the software's
+        Software tomcat = new Software("Tomcat", 300);
+        Software java = new Software("Java", 1000);
+        Software debian = new Software("Debian", 2000);
+        Software sqlServer = new Software("SQL Server", 400);
+        Software dotNet = new Software(".NET", 1000);
+        Software ubuntu = new Software("Ubuntu", 2500);
+        Software staticBinary = new Software("Static Binary", 200);
+        Software alpine = new Software("Alpine", 800);
 
-        Software vscode = new Software("VScode", 200);
-        Software ubuntu = new Software("Ubuntu", 2000);
-        Software chrome = new Software("Chrome", 2500);
-        Software minecraft = new Software("Minecraft", 500);
 
-        System.out.println("Software: " + vscode.name + " Size: " + vscode.size);
-        System.out.println("Software: " + minecraft.name + " Size: " + minecraft.size);
+        //creating the containers
+        Container webContainer = new Container();
+        Container sqlContainer = new Container();
+        Container staticContainer = new Container();
 
-        //create a instance of container and add softwares
-        Container emanuelBravo = new Container();
-        //add 2 software's
-        emanuelBravo.addSoftware(ubuntu);
-        emanuelBravo.addSoftware(minecraft);
+        //adding software's to each container
+        webContainer.addSoftware(tomcat);
+        webContainer.addSoftware(java);
+        webContainer.addSoftware(debian);
+        sqlContainer.addSoftware(sqlServer);
+        sqlContainer.addSoftware(dotNet);
+        sqlContainer.addSoftware(ubuntu);
+        staticContainer.addSoftware(staticBinary);
+        staticContainer.addSoftware(alpine);
+
         //container run
-        emanuelBravo.run();
-        System.out.println("Status container ebravo: " + emanuelBravo.statusContainer());
+        System.out.println("\nRunning Containers!\n");
+        webContainer.run();
+        sqlContainer.run();
+        staticContainer.run();
+
         //error
-        emanuelBravo.addSoftware(chrome);
-
-        System.out.println("emanuelBravo length: \n " + emanuelBravo.toString());
-
-        //create a instance of container
-        Container arthurPeixoto = new Container();
-        arthurPeixoto.addSoftware(minecraft);
-
-        System.out.println(arthurPeixoto.toString());
+        System.out.println("\nExample of ERROR: trying to add a software while container is running\n");
+        webContainer.addSoftware(ubuntu);
+        
+        System.out.println("\nwebContainer:\n" + webContainer.toString());
+        System.out.println("\nsqlContainer:\n" + sqlContainer.toString());
+        System.out.println("\nstaticContainer:\n" + staticContainer.toString());
 
         Compose build = new Compose();
-        build.addContainer(emanuelBravo);
-        build.addContainer(arthurPeixoto);
+        build.addContainer(webContainer);
+        build.addContainer(sqlContainer);
+        build.addContainer(staticContainer);
 
         build.run();
+        System.out.println("Size of Compose: " + build.sizeCompose() + "\n");
 
-        System.out.println("Size of containers: " + build.sizeCompose() + "\n");
-
+        System.out.println("Stopping Compose!\n");
         build.stop();
-
-        System.out.println("Size of containers: " + build.sizeCompose() + "\n");
+        System.out.println("Size of Compose: " + build.sizeCompose() + "\n");
 
     }
+    
 }

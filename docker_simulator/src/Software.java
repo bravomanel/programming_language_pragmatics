@@ -4,10 +4,11 @@ public class Software {
     public Software(String name, int size){
         this.name = name;
         this.size = size;
+        System.out.println("Software added: '" + this.name + "' with size: " + this.size);
     }
 
     public String toString() {
-        return "Name: " + this.name + "  Size : " + this.size;
+        return "Name: '" + this.name + "' Size : " + this.size;
     }
 
 }

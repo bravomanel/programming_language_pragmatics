@@ -9,27 +9,45 @@ public class Container {
         this.status = false;
     }
 
-    // function for return status of container ir running or not
     public boolean statusContainer() {
         return this.status;
     }
 
-    public String toString(){
-        String size = "this container have " + container.size() + " software's \n";
+    public void run() {
+        this.status = true;
+    }
 
-        for(Software software: container)
-            size = size + software.toString() + "\n";
-
-        return size;
+    public void stop() {
+        this.status = false;
     }
 
     public void addSoftware(Software software) {
-        // verify if container is running
         if (!this.status) {
             container.add(software);
+        } else {
+            System.out.println("Container is running, please stop the execution to add a software \n");
         }
-        else{
-        System.out.println("Container is running, please stop de execution for add softwares \n");
+    }
+
+    public boolean hasSoftware(Software software) {
+        if (container.contains(software)) {
+            // System.out.println("Container have this software \n");
+            return true;
+        } else {
+            // System.out.println("Container don't have this software \n");
+            return false;
+        }
+    }
+    
+    public void removeSoftware(Software software) {
+        if (!this.status) {
+            if (container.contains(software)) {
+                container.remove(software);
+            } else {
+                System.out.println("Container don't have this software \n");
+            }
+        } else {
+            System.out.println("Container is running, please stop the execution to remove a software \n");
         }
     }
 
@@ -41,14 +59,16 @@ public class Container {
         return size;
     }
 
-    public void run() {
-        this.status = true;
-    }
+    public String toString(){
+        String status = "Status: " + (this.status ? "Running" : "Stopped") + "\n";
+        String totalSize = "Container size: " + sizeContainer() + "\n";
+        String softwareSize = "This container have " + container.size() + " software's \n";
+        for(Software software: container)
+            softwareSize += "- " + software.toString() + "\n";
 
-    public void stop() {
-        this.status = false;
-    }
+        status = status + totalSize + softwareSize;
 
+        return status;
+    }
+    
 }
-
-
