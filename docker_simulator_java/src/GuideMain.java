@@ -14,23 +14,23 @@ public class GuideMain {
 
         //creating the containers
         Container webContainer = new Container();
-        Container sqlContainer = new Container();
+        Container dbContainer = new Container();
         Container staticContainer = new Container();
 
         //adding software's to each container
         webContainer.addSoftware(tomcat);
         webContainer.addSoftware(java);
         webContainer.addSoftware(debian);
-        sqlContainer.addSoftware(sqlServer);
-        sqlContainer.addSoftware(dotNet);
-        sqlContainer.addSoftware(ubuntu);
+        dbContainer.addSoftware(sqlServer);
+        dbContainer.addSoftware(dotNet);
+        dbContainer.addSoftware(ubuntu);
         staticContainer.addSoftware(staticBinary);
         staticContainer.addSoftware(alpine);
 
         //container run
         System.out.println("\nRunning Containers!\n");
         webContainer.run();
-        sqlContainer.run();
+        dbContainer.run();
         staticContainer.run();
 
         //error
@@ -39,13 +39,13 @@ public class GuideMain {
         
         //print the containers
         System.out.println("\nwebContainer:\n" + webContainer.toString());
-        System.out.println("\nsqlContainer:\n" + sqlContainer.toString());
+        System.out.println("\ndbContainer:\n" + dbContainer.toString());
         System.out.println("\nstaticContainer:\n" + staticContainer.toString());
 
         //creating and running a instance of compose
         Compose build = new Compose();
         build.addContainer(webContainer);
-        build.addContainer(sqlContainer);
+        build.addContainer(dbContainer);
         build.addContainer(staticContainer);
 
         build.run();
