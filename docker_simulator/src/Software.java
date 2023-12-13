@@ -7,6 +7,10 @@ public class Software {
         System.out.println("Software added: '" + this.name + "' with size: " + this.size);
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public String toString() {
         return "Name: '" + this.name + "' Size : " + this.size;
     }
