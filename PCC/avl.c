@@ -1,12 +1,9 @@
-  #include <stdio.h>
-
+#include <stdio.h>
 #include   <stdlib.h>
+#include <math.h>
 
-    #include <math.h>
-
-    #define NUMERO_UM 1
-
-    #define NOME_ARQUIVO entrada.txt
+#define NUMERO_UM 1
+#define NOME_ARQUIVO "entrada.txt"
 
 // alunos: Arthur Peixoto / Emanuel Bravo;
 
@@ -370,10 +367,10 @@ int main() {
 
     case 1:
 
-      arq = fopen("NOME_ARQUIVO", "r");
+      arq = fopen(NOME_ARQUIVO, "r");
 
       if (arq == NULL) {
-        printf("\n !! Erro ao abrir o arquivo NOME_ARQUIVO !! \n");
+        printf("\n !! Erro ao abrir o arquivo !! \n");
         return 1;
       }
 

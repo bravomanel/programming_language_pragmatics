@@ -11,11 +11,11 @@ public class Compose {
         compose.add(container);
     }
 
-    public int sizeCompose() {
+    public int getSize() {
         int size = 0;
         for (Container container : compose) {
-            if (container.statusContainer())
-                size = size + container.sizeContainer();
+            if (container.getStatus())
+                size = size + container.getSize();
         }
         return size;
     }
