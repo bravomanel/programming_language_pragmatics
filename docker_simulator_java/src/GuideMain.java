@@ -49,12 +49,12 @@ public class GuideMain {
         build.addContainer(staticContainer);
 
         build.run();
-        System.out.println("Containers running: " + build.getSize() + "\n");
+        System.out.println("Containers running: " + build.sizeComposeRunning() + "\n");
 
         System.out.println("Stopping Compose!\n");
         build.stop();
         
-        System.out.println("Containers running: " + build.getSize() + "\n");
+        System.out.println("Containers running: " + build.sizeComposeRunning() + "\n");
 
     }
 

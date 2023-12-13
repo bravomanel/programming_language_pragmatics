@@ -34,11 +34,11 @@ public class Main {
 
         build.run();
 
-        System.out.println("Size of containers: " + build.sizeCompose() + "\n");
+        System.out.println("Size of containers: " + build.sizeComposeRunning() + "\n");
 
         build.stop();
 
-        System.out.println("Size of containers: " + build.sizeCompose() + "\n");
+        System.out.println("Size of containers: " + build.sizeComposeRunning() + "\n");
 
     }
 }

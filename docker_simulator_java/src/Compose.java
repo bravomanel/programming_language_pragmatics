@@ -11,7 +11,7 @@ public class Compose {
         compose.add(container);
     }
 
-    public int getSize() {
+    public int sizeComposeRunning() {
         int size = 0;
         for (Container container : compose) {
             if (container.getStatus())
