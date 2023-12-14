@@ -16,7 +16,7 @@ public class Main {
         emanuelBravo.addSoftware(minecraft);
         //container run
         emanuelBravo.run();
-        System.out.println("Status container ebravo: " + emanuelBravo.getStatus());
+        System.out.println("Status container ebravo: " + (emanuelBravo.getStatus() ? "Running" : "Stopped") + "\n");
         //error
         emanuelBravo.addSoftware(chrome);
 

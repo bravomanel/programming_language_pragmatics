@@ -12,45 +12,36 @@ data Compose = Compose
   { composeContainers :: [Container]
   } deriving (Show)
 
--- Function to create software instances
 createSoftware :: String -> Int -> Software
 createSoftware name size = Software name size
 
--- Function to create a container with a list of software
 createContainer :: [Software] -> Container
 createContainer softwareList = Container softwareList False
 
--- Function to create a compose with a list of containers
 createCompose :: [Container] -> Compose
 createCompose containers = Compose containers
 
--- Function to add software to a container
 addSoftwareToContainer :: Software -> Container -> Container
 addSoftwareToContainer software container =
   container { containerSoftware = software : containerSoftware container }
 
--- Function to add a container to compose
 addContainerToCompose :: Container -> Compose -> Compose
 addContainerToCompose container compose =
   compose { composeContainers = container : composeContainers compose }
 
--- Function to run all containers in compose
 runCompose :: Compose -> Compose
 runCompose compose =
   compose { composeContainers = map runContainer (composeContainers compose) }
   where
     runContainer container = container { containerStatus = True }
 
--- Function to stop a container
 stopContainer :: Container -> Container
 stopContainer container = container { containerStatus = False }
 
--- Function to get the real-time size of containers with active software
 getTamanhoTempoReal :: Compose -> Int
 getTamanhoTempoReal compose =
   sum [softwareSize s | container <- composeContainers compose, containerStatus container, s <- containerSoftware container]
 
--- Example usage
 main :: IO ()
 main = do
   let tomcat = createSoftware "Tomcat" 300

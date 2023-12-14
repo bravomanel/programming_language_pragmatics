@@ -9,11 +9,26 @@ def remove_inline_comments(code):
     aux = ''
     for line in code.splitlines(True):
         if line.find('//') != -1:
-            aux += line[0:line.find('//')]
+            aux += line[0:line.find('//')] + '\n'
         else:
             aux += line
     return aux
 
+def process_define(text):
+    define_directives = re.compile(r'#define\s(\w+)\s(.*)').findall(text)
+    for match in define_directives:
+        text = text.replace(f'#define {match[0]} {match[1]}', '')
+        text = re.sub(r'\b' + match[0] + r'\b', match[1], text)
+    return text
+
+def remove_linebreak(code):
+    aux = ''
+    for line in code.splitlines():
+        if line.find('#') == -1:
+            aux += line
+        else:
+            aux += line + '\n'
+    return aux
 
 def remove_multiline_comments(code):
     opencomment = code.find('/*')
@@ -24,15 +39,6 @@ def remove_multiline_comments(code):
         aux = code[0:opencomment] + code[closecomment+2:]
         return remove_multiline_comments(aux)
 
-
-def remove_linebreak(code):
-    aux = ''
-    for line in code.splitlines():
-        if line.find('#') == -1:
-            aux += line
-        else:
-            aux += line + '\n'
-    return aux
 
 
 def remove_multiple_spaces(code):
@@ -48,14 +54,6 @@ def remove_desnecessary_space(code):
         else:
             aux += re.sub(r'\s*([;:`|,!(){}=\-<>\[\]])\s*', r'\1', line)
     return aux
-
-
-def process_define(text):
-    define_directives = re.compile(r'#define\s*(\w+)\s*(.*)').findall(text)
-    for match in define_directives:
-        text = text.replace(f'#define {match[0]} {match[1]}', '')
-        text = re.sub(r'\b' + match[0] + r'\b', match[1], text)
-    return text
 
 def process_include(text):
     include_directives = re.compile(r'#include\s*[<](.*?)[>]').findall(text)    
