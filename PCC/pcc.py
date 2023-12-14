@@ -82,7 +82,7 @@ def process_include(text):
         except FileNotFoundError:
             print(f"Warning: File '{match}' not found in local directory.")
     
-    if (len(include_directives) + len(include_locals)) != 0 and included_any == False:
+    if included_any == False:
         return text
     else:
         return process_include(text)

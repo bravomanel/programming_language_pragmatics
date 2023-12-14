@@ -5,6 +5,7 @@ data Software = Software
 
 data Container = Container
   { containerSoftware :: [Software]
+  , containerName :: String
   , containerStatus :: Bool
   } deriving (Show)
 
@@ -15,8 +16,8 @@ data Compose = Compose
 createSoftware :: String -> Int -> Software
 createSoftware name size = Software name size
 
-createContainer :: [Software] -> Container
-createContainer softwareList = Container softwareList False
+createContainer :: [Software] -> String -> Container
+createContainer softwareList name = Container softwareList name False
 
 createCompose :: [Container] -> Compose
 createCompose containers = Compose containers
@@ -34,6 +35,10 @@ runCompose compose =
   compose { composeContainers = map runContainer (composeContainers compose) }
   where
     runContainer container = container { containerStatus = True }
+
+stopCompose :: Compose -> Compose
+stopCompose compose =
+  compose { composeContainers = map stopContainer (composeContainers compose) }
 
 stopContainer :: Container -> Container
 stopContainer container = container { containerStatus = False }
@@ -53,17 +58,26 @@ main = do
       staticBinary = createSoftware "Static Binary" 200
       alpine = createSoftware "Alpine" 800
 
-      web = createContainer [tomcat, java, debian]
-      db = createContainer [sqlServer, dotNET, ubuntu]
-      static = createContainer [staticBinary, alpine]
+      web = createContainer [tomcat, java, debian] "web"
+      db = createContainer [sqlServer, dotNET, ubuntu] "db"
+      static = createContainer [staticBinary, alpine] "static"
 
       compose = createCompose [web, db, static]
 
   let updatedCompose = runCompose compose
-      stoppedContainer = stopContainer (head (composeContainers updatedCompose))
+      stoppedCompose = stopCompose compose
 
+  print java
+  putStrLn "\n" 
+  print web
+  putStrLn "\n" 
   print updatedCompose
-  print stoppedContainer
+  putStrLn "\n" 
+  print stoppedCompose
+  putStrLn "\n" 
+  
 
-  let totalSize = getTamanhoTempoReal updatedCompose
-  putStrLn $ "Total Size: " ++ show totalSize
+  let totalSizeRunning = getTamanhoTempoReal updatedCompose
+  let totalSizeStopped = getTamanhoTempoReal stoppedCompose
+  putStrLn $ "Total Size Running Compose: " ++ show totalSizeRunning
+  putStrLn $ "Total Size Stopped Compose: " ++ show totalSizeStopped
