@@ -62,7 +62,9 @@ main = do
       db = createContainer [sqlServer, dotNET, ubuntu] "db"
       static = createContainer [staticBinary, alpine] "static"
 
-      compose = createCompose [web, db, static]
+      compose = createCompose [web, db]
+
+      compose2 = addContainerToCompose static compose
 
   let updatedCompose = runCompose compose
       stoppedCompose = stopCompose compose
@@ -70,6 +72,10 @@ main = do
   print java
   putStrLn "\n" 
   print web
+  putStrLn "\n" 
+  print compose
+  putStrLn "\n" 
+  print compose2
   putStrLn "\n" 
   print updatedCompose
   putStrLn "\n" 

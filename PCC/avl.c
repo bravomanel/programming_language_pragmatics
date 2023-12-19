@@ -18,7 +18,7 @@ int altura (arvore *a) {
    if (a == NULL) {
       return -1;
    } else {
-      int he = altura(a->esq);
+      int he=altura(a->esq);
       int hd = altura(a->dir);
       if (he < hd) {
          return hd + NUMERO_UM;

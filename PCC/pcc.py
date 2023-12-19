@@ -39,14 +39,12 @@ def remove_multiline_comments(code):
         aux = code[0:opencomment] + code[closecomment+2:]
         return remove_multiline_comments(aux)
 
-
-
 def remove_multiple_spaces(code):
     aux = re.sub(r'(  +)', ' ', code)
     aux = re.sub(r'(\t)', '', aux)
     return aux
 
-def remove_desnecessary_space(code):
+def remove_unnecessary_space(code):
     aux = ''
     for line in code.splitlines(True):
         if line.find('#') != -1:
@@ -67,7 +65,6 @@ def process_include(text):
                 include_content = include_file.read()
                 text = text.replace(f'#include <{match}>', include_content)
                 included_any = True
-                include_directives.remove(match)
         except FileNotFoundError:
             print(f"Warning: File '{match}' not found in include directive.")            
 
@@ -75,7 +72,6 @@ def process_include(text):
     for match in include_locals:
         try:
             with open(match, 'r') as include_file:
-                include_locals.remove(match)
                 include_content = include_file.read()
                 included_any = True
                 text = text.replace(f'#include "{match}"', include_content)
@@ -116,7 +112,7 @@ if __name__ == '__main__':
     aux_code = remove_linebreak(aux_code)
     aux_code = remove_multiline_comments(aux_code)
     aux_code = remove_multiple_spaces(aux_code)
-    aux_code = remove_desnecessary_space(aux_code)
+    aux_code = remove_unnecessary_space(aux_code)
     aux_code = process_include(aux_code)
     
     output.write(aux_code)
